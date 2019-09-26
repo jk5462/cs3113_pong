@@ -1,0 +1,8 @@
+﻿  main.cpp
+C:\Users\Augustine\source\repos\Pong\main.cpp(29,93): warning C4305:  '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Augustine\source\repos\Pong\main.cpp(30,91): warning C4305:  '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Augustine\source\repos\Pong\main.cpp(69,21): warning C4305:  '=': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Augustine\source\repos\Pong\main.cpp(72,21): warning C4305:  '=': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Augustine\source\repos\Pong\main.cpp(75,18): warning C4305:  '=': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Augustine\source\repos\Pong\main.cpp(76,19): warning C4305:  '=': 'double'에서 'float'(으)로 잘립니다.
+  SDLProject.vcxproj -> C:\Users\Augustine\source\repos\Pong\Debug\SDLProject.exe

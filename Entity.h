@@ -27,7 +27,7 @@ public:
     Entity();
     
     void Update(float deltaTime);
-    void Render(ShaderProgram *program, float vertices[]);
+    void Render(ShaderProgram *program, float vertices[], float color[]);
 };
 
 

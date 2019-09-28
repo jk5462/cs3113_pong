@@ -26,8 +26,13 @@ float lastTicks = 0;
 
 Entity player1, player2, ball;
 
-float playerVertices[] = { -0.3, -1.0, 0.3, -1.0, 0.3, 1.0, -0.3, -1.0, 0.3, 1.0, -0.3, 1.0 };
-float ballVertices[] = { -0.3, -0.3, 0.3, -0.3, 0.3, 0.3, -0.3, -0.3, 0.3, 0.3, -0.3, 0.3 };
+int winningPlayer = 1;
+
+float defaultColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+float altColor[] = { 1.0f, 0.5f, 1.0f, 1.0f };
+
+float playerVertices[] = { -0.05, -0.75, 0.05, -0.75, 0.05, 0.75, -0.05, -0.75, 0.05, 0.75, -0.05, 0.75 };
+float ballVertices[] = { -0.2, -0.2, 0.2, -0.2, 0.2, 0.2, -0.2, -0.2, 0.2, 0.2, -0.2, 0.2 };
 
 GLuint fontTextureID;
 
@@ -66,22 +71,22 @@ void Initialize() {
     
     program.Load("shaders/vertex.glsl", "shaders/fragment.glsl");
 
-	player1.width = 0.6;
-	player1.height = 2;
+	player1.width = 0.1;
+	player1.height = 1.5;
 
-	player2.width = 0.6;
-	player2.height = 2;
+	player2.width = 0.1;
+	player2.height = 1.5;
 
-	ball.width = 0.6;
-	ball.height = 0.6;
+	ball.width = 0.4;
+	ball.height = 0.4;
     
-	player1.position = glm::vec3(-4.7f, 0.0f, 0.0f);
+	player1.position = glm::vec3(-4.9f, 0.0f, 0.0f);
 	player1.movement = glm::vec3(0.0f, 0.0f, 0.0f);
-	player1.speed = 3;
+	player1.speed = 4;
 
-	player2.position = glm::vec3(4.7f, 0.0f, 0.0f);
+	player2.position = glm::vec3(4.9f, 0.0f, 0.0f);
 	player2.movement = glm::vec3(0.0f, 0.0f, 0.0f);
-	player2.speed = 3;
+	player2.speed = 4;
 
 	ball.position = glm::vec3(0.0f, 0.0f, 0.0f);
 	ball.movement = glm::vec3(1.0f, 1.0f, 0.0f);
@@ -191,13 +196,20 @@ void ProcessInput() {
 	else {
 		player2.movement = glm::vec3(0.0f, 0.0f, 0.0f);
 	}
+
+	//Reset ball position
+	if (keys[SDL_SCANCODE_R])
+	{
+		ball.position = glm::vec3(0.0f, 0.0f, 0.0f);
+		ball.speed = 3;
+	}
 }
 
 void Update() {
     float ticks = (float)SDL_GetTicks() / 1000.0f;
     float deltaTime = ticks - lastTicks;
     lastTicks = ticks;
-    
+
 	if (CheckTopBorderCollision(&ball)) {
 		ball.movement.y *= -1;
 	}
@@ -208,17 +220,24 @@ void Update() {
 
 	else if (CheckLeftBorderCollision(&ball)) {
 		ball.position = glm::vec3(0.0f, 0.0f, 0.0f);
+		ball.speed = 3;
+		winningPlayer = 2;
 	}
 
 	else if (CheckRightBorderCollision(&ball)) {
 		ball.position = glm::vec3(0.0f, 0.0f, 0.0f);
+		ball.speed = 3;
+		winningPlayer = 1;
 	}
 
+	//Ball gets faster every player entity-ball collision
 	if (CheckEntityCollision(&ball, &player1)) {
+		ball.speed += .2;
 		ball.movement.x *= -1;
 	}
 
 	else if (CheckEntityCollision(&ball, &player2)) {
+		ball.speed += .2;
 		ball.movement.x *= -1;
 	}
 
@@ -230,9 +249,16 @@ void Update() {
 void Render() {
     glClear(GL_COLOR_BUFFER_BIT);
     
-    player1.Render(&program, playerVertices);
-	player2.Render(&program, playerVertices);
-	ball.Render(&program, ballVertices);
+	if (winningPlayer == 1) {
+		player1.Render(&program, playerVertices, altColor);
+		player2.Render(&program, playerVertices, defaultColor);
+	}
+	else {
+		player1.Render(&program, playerVertices, defaultColor);
+		player2.Render(&program, playerVertices, altColor);
+	}
+
+	ball.Render(&program, ballVertices, defaultColor);
  
     SDL_GL_SwapWindow(displayWindow);
 }
